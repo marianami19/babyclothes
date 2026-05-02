@@ -25,7 +25,7 @@ const VALUES = [
   {
     icon: Award,
     title: 'No Compromises on Quality',
-    body: 'We could cut costs with inferior fabrics. We chose not to. Every stitch is reinforced, every wash tested, every garment held to the same standard we'd want for our own baby.',
+    body: "We could cut costs with inferior fabrics. We chose not to. Every stitch is reinforced, every wash tested, every garment held to the same standard we'd want for our own baby.",
     color: 'text-purple-400 bg-lavender/30',
   },
 ]

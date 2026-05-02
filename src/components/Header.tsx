@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingBag, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import CurrencySelector from './CurrencySelector'
@@ -16,6 +16,8 @@ const NAV = [
 export default function Header() {
   const totalItems = useCartStore((s) => s.totalItems)()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mounted,  setMounted]  = useState(false)
+  useEffect(() => setMounted(true), [])
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/40 bg-white/60 backdrop-blur-xl">
@@ -53,7 +55,7 @@ export default function Header() {
           >
             <ShoppingBag className="h-4 w-4" />
             <span className="hidden sm:inline">Cart</span>
-            {totalItems > 0 && (
+            {mounted && totalItems > 0 && (
               <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-rose text-[10px] font-bold text-white shadow">
                 {totalItems}
               </span>
