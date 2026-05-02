@@ -20,6 +20,7 @@ model Product {
   color       String
   hexColor    String
   imageUrl    String
+  images      String[]    @default([])
   stock       Int         @default(10)
   tags        String[]
   orderItems  OrderItem[]

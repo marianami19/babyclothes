@@ -1,50 +1,91 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
+import { ShoppingBag, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
+import CurrencySelector from './CurrencySelector'
+
+const NAV = [
+  { href: '/',         label: 'Shop'    },
+  { href: '/about',    label: 'About'   },
+  { href: '/contact',  label: 'Contact' },
+  { href: '/size-guide', label: 'Size Guide' },
+]
 
 export default function Header() {
   const totalItems = useCartStore((s) => s.totalItems)()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-pink-100 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-white/40 bg-white/60 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">🌸</span>
-          <span className="font-display text-xl font-semibold text-pink-500">
+        <Link href="/" className="flex items-center gap-2 select-none" onClick={() => setMenuOpen(false)}>
+          <span className="text-xl">🌸</span>
+          <span className="font-display text-xl font-semibold text-pink-500 tracking-tight">
             Little &amp; Loved
           </span>
         </Link>
 
-        {/* Nav */}
-        <nav className="hidden items-center gap-6 text-sm font-medium text-pink-400 sm:flex">
-          <Link href="/" className="hover:text-pink-600 transition-colors">
-            Shop
-          </Link>
-          <Link href="/size-guide" className="hover:text-pink-600 transition-colors">
-            Size Guide
-          </Link>
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-6 text-sm font-medium text-gray-500 md:flex">
+          {NAV.map((n) => (
+            <Link
+              key={n.href}
+              href={n.href}
+              className="transition hover:text-pink-500"
+            >
+              {n.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* Cart */}
-        <Link
-          href="/cart"
-          className="relative flex items-center gap-2 rounded-full bg-baby-pink px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105 active:scale-95"
-        >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7.5M17 13l1.5 7.5M9 20.5a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-            />
-          </svg>
-          Cart
-          {totalItems > 0 && (
-            <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-rose text-xs font-bold text-white">
-              {totalItems}
-            </span>
-          )}
-        </Link>
+        {/* Right section */}
+        <div className="flex items-center gap-2">
+          <CurrencySelector />
+
+          {/* Cart */}
+          <Link
+            href="/cart"
+            className="relative flex items-center gap-1.5 rounded-full bg-baby-pink px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose active:scale-95"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            <span className="hidden sm:inline">Cart</span>
+            {totalItems > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-rose text-[10px] font-bold text-white shadow">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+
+          {/* Mobile menu toggle */}
+          <button
+            className="rounded-full p-2 text-gray-400 transition hover:bg-pink-50 md:hidden"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile nav drawer */}
+      {menuOpen && (
+        <nav className="border-t border-white/40 bg-white/80 px-4 py-3 backdrop-blur-xl md:hidden">
+          {NAV.map((n) => (
+            <Link
+              key={n.href}
+              href={n.href}
+              onClick={() => setMenuOpen(false)}
+              className="block rounded-xl px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-blush hover:text-pink-500"
+            >
+              {n.label}
+            </Link>
+          ))}
+        </nav>
+      )}
     </header>
   )
 }
